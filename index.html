@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Navigation</title>
+    <style>
+        /* Global Reset & Base Style */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #2d3748;
+            --text-secondary: #718096;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --primary: #4f46e5;
+        }
+
+        .dark-mode {
+            --bg-color: #121826;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Area */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 20px;
+            display: grid;
+            place-items: center;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .clock {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            animation: fadeIn 1s ease;
+        }
+
+        .date {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        /* Search Box */
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 50px;
+            border: none;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            font-size: 1rem;
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .search-box input:focus {
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-3px);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #4338ca;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        /* Link Groups */
+        .link-group {
+            margin-bottom: 40px;
+        }
+
+        .group-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-left: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            background: var(--card-bg);
+            padding: 24px 12px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            animation: slideUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .link-card:nth-child(2n) {
+            animation-delay: 0.1s;
+        }
+        .link-card:nth-child(3n) {
+            animation-delay: 0.2s;
+        }
+        .link-card:nth-child(4n) {
+            animation-delay: 0.3s;
+        }
+
+        .link-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .link-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .link-name {
+            font-size: 0.95rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .clock {
+                font-size: 2.8rem;
+            }
+            .link-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header & Clock -->
+        <header>
+            <button class="theme-toggle" id="themeBtn">🌓</button>
+            <div class="clock" id="clock">00:00:00</div>
+            <div class="date" id="date">Monday, January 01, 2025</div>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search web...">
+            <button id="searchBtn">🔍</button>
+        </div>
+
+        <!-- Common Websites -->
+        <div class="link-group">
+            <h3 class="group-title">Daily Tools</h3>
+            <div class="link-grid">
+                <a href="https://www.google.com" target="_blank" class="link-card">
+                    <div class="link-icon">🔎</div>
+                    <div class="link-name">Google</div>
+                </a>
+                <a href="https://github.com" target="_blank" class="link-card">
+                    <div class="link-icon">💻</div>
+                    <div class="link-name">GitHub</div>
+                </a>
+                <a href="https://stackoverflow.com" target="_blank" class="link-card">
+                    <div class="link-icon">❓</div>
+                    <div class="link-name">Stack Overflow</div>
+                </a>
+                <a href="https://www.youtube.com" target="_blank" class="link-card">
+                    <div class="link-icon">▶️</div>
+                    <div class="link-name">YouTube</div>
+                </a>
+                <a href="https://mail.google.com" target="_blank" class="link-card">
+                    <div class="link-icon">📧</div>
+                    <div class="link-name">Gmail</div>
+                </a>
+                <a href="https://drive.google.com" target="_blank" class="link-card">
+                    <div class="link-icon">☁️</div>
+                    <div class="link-name">Cloud Drive</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Development -->
+        <div class="link-group">
+            <h3 class="group-title">Development</h3>
+            <div class="link-grid">
+                <a href="https://codepen.io" target="_blank" class="link-card">
+                    <div class="link-icon">✏️</div>
+                    <div class="link-name">CodePen</div>
+                </a>
+                <a href="https://developer.mozilla.org" target="_blank" class="link-card">
+                    <div class="link-icon">📚</div>
+                    <div class="link-name">MDN Docs</div>
+                </a>
+                <a href="https://npmjs.com" target="_blank" class="link-card">
+                    <div class="link-icon">📦</div>
+                    <div class="link-name">NPM</div>
+                </a>
+                <a href="https://jsonlint.com" target="_blank" class="link-card">
+                    <div class="link-icon">📋</div>
+                    <div class="link-name">JSON Tools</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Entertainment -->
+        <div class="link-group">
+            <h3 class="group-title">Entertainment</h3>
+            <div class="link-grid">
+                <a href="https://twitter.com" target="_blank" class="link-card">
+                    <div class="link-icon">🐦</div>
+                    <div class="link-name">Twitter</div>
+                </a>
+                <a href="https://reddit.com" target="_blank" class="link-card">
+                    <div class="link-icon">🤖</div>
+                    <div class="link-name">Reddit</div>
+                </a>
+                <a href="https://spotify.com" target="_blank" class="link-card">
+                    <div class="link-icon">🎵</div>
+                    <div class="link-name">Spotify</div>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="link-card">
+                    <div class="link-icon">📷</div>
+                    <div class="link-name">Instagram</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Real-time Clock & Date
+        function updateClock() {
+            const now = new Date();
+            // Time
+            let hours = String(now.getHours()).padStart(2, '0');
+            let mins = String(now.getMinutes()).padStart(2, '0');
+            let secs = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${mins}:${secs}`;
+
+            // Date
+            const weekArr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const monthArr = ["January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"];
+            const week = weekArr[now.getDay()];
+            const month = monthArr[now.getMonth()];
+            const day = String(now.getDate()).padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('date').textContent = `${week}, ${month} ${day}, ${year}`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 2. Dark / Light Mode Toggle
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+
+        // 3. Search Function (Google Search)
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        function doSearch() {
+            const keyword = searchInput.value.trim();
+            if (keyword) {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(keyword)}`, '_blank');
+            }
+        }
+        searchBtn.addEventListener('click', doSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doSearch();
+        });
+    </script>
+</body>
+</html>
